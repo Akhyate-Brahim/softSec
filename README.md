@@ -22,14 +22,6 @@ SELECT column1, column2
 FROM table1
 INNER JOIN table2 ON table1.column = table2.column;
 
--- SQL Injection Prevention Example
--- Use parameterized queries or prepared statements to prevent SQL injection.
--- Example in Python with SQLite:
-import sqlite3
-conn = sqlite3.connect("database.db")
-cursor = conn.cursor()
-lname = "Smith"
-cursor.execute("SELECT * FROM customers WHERE last_name = ?", (lname,))
 ```
 ## SQL injections on SELECT statements
 
@@ -75,11 +67,51 @@ inject an UPDATE request with new data for instance.
         ```shell
         echo -n "Alice" | sha1sum
         ```
+    Or we can directly use the SHA1(string) function in SQL
     - we inject this hash using the same technique
         ```sql
-        ' password ='35318264c9a98faf79965c270ac80c5606774df1' WHERE name='Boby'#
+        ', password = SHA1('Alice') WHERE name='Boby'#
         ```
         we can see that Boby can only login if he puts Alice in his password box.
 
 ##  Countermeasure - prepared statement
+Among the best countermeasures to SQL injections is using a prepared statement in your code. 
 
+The loophole that is exploited in this attack is that code is mixed with data, so by tampering with data, we can bypass limiters like single or double quotes and introduce new code, the code is then compiled after being modified. 
+
+Prepared statement basically compile our SQL code before injecting the data onto it using placeholders like '?', then the data is inserted right before execution.
+
+the unsafe php code that allowed for the sql injections to occur is the following:
+```php
+$result = $conn->query("SELECT id, name, eid, salary, ssn
+                        FROM credential
+                        WHERE name= '$input_uname' and Password= '$hashed_pwd'");
+
+```
+
+we can see here that we can tamper with the query before it's compilation.
+
+**the safe version should seperate the SQL code then execute it, then inject our data, here is a sample of how a prepared statement works after modifying the file [unsafe.php](./Labsetup/image_www/Code/defense/unsafe.php) :**
+
+```php
+$stmt = $conn->prepare("SELECT id, name, eid, salary, ssn
+                        FROM credential
+                        WHERE name = ? AND Password = ?");
+$stmt->bind_param("ss", $input_uname, $hashed_pwd);
+$stmt->execute();
+$stmt->bind_result($id, $name, $eid, $salary, $ssn);
+$stmt->fetch();
+```
+
+After attempting the following injection we fail:
+![INJECTION](./injection.png)
+![INJECTION FAIL](./injection_failed.png)
+
+
+Here is the information after logging on correctly:
+![info](./info.png)
+
+
+Note that prepared statements are **not always the solution** as it only deals with static SQL queries with a fixed structure, this is because prepared statements can only be used to protect fields that are not needed during compilation.Therefore **we cannot use prepared statements in Column names, Table names, SQL operators or within an ORDER BY clause.**
+
+There are other ways to deal with SQL injections in such cases, mainly ***Whitelisting***.
