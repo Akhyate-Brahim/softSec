@@ -115,3 +115,4 @@ Here is the information after logging on correctly:
 Note that prepared statements are **not always the solution** as it only deals with static SQL queries with a fixed structure, this is because prepared statements can only be used to protect fields that are not needed during compilation.Therefore **we cannot use prepared statements in Column names, Table names, SQL operators or within an ORDER BY clause.**
 
 There are other ways to deal with SQL injections in such cases, mainly ***Whitelisting***.
+
