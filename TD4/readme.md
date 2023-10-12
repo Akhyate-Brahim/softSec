@@ -36,7 +36,7 @@ after running the call_shellcode.c file, i get a shell where i can input any com
 
 ### Stackguard protection 
 
-- upon changing the flag to noexecstack, i get the following error:
+- upon deleting the flag `-fno-stack-protector`, i get the following error:
 ```bash
 Input size: 517
 *** stack smashing detected ***: terminated
