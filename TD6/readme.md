@@ -6,7 +6,7 @@
 $ tr 'ytnvupmrqbdxzahlcgeifskjo' 'THEANDIGSFYOUCRWMBPLVKXQJ' <ciphertext.txt> test.txt 
 ```
 
-[./Files/ciphertext.txt](ciphertext) -> [./Files/test.txt](plaintext)
+[./Labsetup/Files/ciphertext.txt](ciphertext) -> [./Labsetup/Files/test.txt](plaintext)
 
 ## ECB AND CBC MODES ON PICS
 
