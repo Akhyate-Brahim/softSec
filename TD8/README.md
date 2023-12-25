@@ -1,4 +1,4 @@
-# LAB 8 - Asymetric encryptiona and the RSA algorithm
+# LAB 8 - Asymetric encryption and the RSA algorithm
 
 ## RSA algorithm
 
